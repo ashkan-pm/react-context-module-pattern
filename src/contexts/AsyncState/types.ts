@@ -27,5 +27,6 @@ export type AsyncAction<DataType> =
   | { type: AsyncActionTypes.ASYNC_RESET };
 export type AsyncContext<DataType> = {
   asyncState: AsyncState<DataType>;
-  dispatch: (action: AsyncAction<DataType>) => void;
+  dispatch: AsyncDispatch<DataType>;
 };
+export type AsyncDispatch<DataType> = (action: AsyncAction<DataType>) => void;

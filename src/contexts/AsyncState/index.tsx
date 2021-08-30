@@ -31,7 +31,7 @@ export function AsyncStateProvider<DataType>({
 export function useAsyncState<DataType>() {
   let value = useContext(AsyncStateContext as Context<AsyncContext<DataType> | undefined>);
   if (value === undefined) {
-    throw new Error('UseAsyncStateState must be used within a UseAsyncStateProvider');
+    throw new Error('useAsyncState must be used within a AsyncStateProvider');
   }
 
   return value;

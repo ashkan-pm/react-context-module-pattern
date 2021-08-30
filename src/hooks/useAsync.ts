@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { debounce } from 'lodash';
 import { useAsyncState } from 'contexts/AsyncState';
 import { AsyncContext } from 'contexts/AsyncState/types';
+import { debouncedExecute, execute } from 'contexts/AsyncState/actions';
 
 export enum AsyncStatus {
   Idle,
@@ -26,42 +26,11 @@ export function useAsync<RequestType, DataType>(
   const { asyncState, dispatch } = useAsyncState<DataType>() as unknown as AsyncContext<DataType>;
 
   const run = useCallback(
-    async (request: RequestType) => {
-      try {
-        dispatch({
-          type: AsyncActionTypes.ASYNC_PENDING
-        });
-        const data = await promise(request);
-        dispatch({
-          type: AsyncActionTypes.ASYNC_RESOLVED,
-          payload: { data }
-        });
-      } catch (error) {
-        if (error instanceof Error) {
-          dispatch({
-            type: AsyncActionTypes.ASYNC_REJECTED,
-            payload: { error }
-          });
-        }
-      }
-    },
-    [promise, dispatch]
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedCallback = useCallback(debounce(run, debounceInterval), [
-    run,
-    debounceInterval,
-    dispatch
-  ]);
-  const debouncedRun = useCallback(
-    (request: RequestType) => {
-      dispatch({
-        type: AsyncActionTypes.ASYNC_PENDING
-      });
-      debouncedCallback(request);
-    },
-    [debouncedCallback, dispatch]
+    (request: RequestType) =>
+      debounceInterval
+        ? debouncedExecute(debounceInterval, { dispatch, promise, request })
+        : execute({ dispatch, promise, request }),
+    [dispatch, promise, debounceInterval]
   );
 
   const reset = useCallback(
@@ -72,5 +41,5 @@ export function useAsync<RequestType, DataType>(
     [dispatch]
   );
 
-  return { asyncState, run: !debounceInterval ? run : debouncedRun, reset };
+  return { asyncState, run, reset };
 }

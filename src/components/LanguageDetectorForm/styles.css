@@ -1,0 +1,40 @@
+.LanguageDetectorForm > label {
+  color: #666;
+}
+
+.LanguageDetectorForm > input[type='text'] {
+  outline: none;
+  background-color: white;
+  padding: 8px 12px;
+  border: 1px solid #cbcbcb;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.LanguageDetectorForm > input[type='text']:focus {
+  border-color: #00cfac;
+}
+
+.LanguageDetectorForm > button {
+  outline: none;
+  margin-left: 12px;
+  padding: 8px 12px;
+  background-color: white;
+  color: #008d75;
+  border: 1px solid #cbcbcb;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.LanguageDetectorForm > button:hover {
+  cursor: pointer;
+}
+
+.LanguageDetectorForm > button:active {
+  background-color: #f8f8f8;
+  border-color: #00cfac;
+}
+
+.LanguageDetectorForm > button:focus {
+  border-color: #00cfac;
+}

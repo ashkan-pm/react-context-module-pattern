@@ -1,4 +1,5 @@
-import { AsyncAction, AsyncActionTypes, AsyncState, AsyncStatus } from './types';
+import { AsyncStatus } from 'hooks/useAsync';
+import { AsyncAction, AsyncActionTypes, AsyncState } from './types';
 
 export function asyncReducer<DataType>(
   state: AsyncState<DataType>,

@@ -1,9 +1,5 @@
-export enum AsyncStatus {
-  Idle,
-  Pending,
-  Resolved,
-  Rejected
-}
+import { AsyncStatus } from 'hooks/useAsync';
+
 export type AsyncState<DataType> = {
   status: AsyncStatus;
   data?: DataType;

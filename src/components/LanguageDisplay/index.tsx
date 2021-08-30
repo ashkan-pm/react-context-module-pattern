@@ -3,14 +3,13 @@ import { useErrorHandler } from 'react-error-boundary';
 import { AsyncStatus, useAsync } from 'hooks/useAsync';
 import { DetectedLanguage, detectLanguage } from 'api/detectLanguage';
 import { ReactComponent as LoadingIcon } from 'assets/loading.svg';
-import LanguageResponse from './LanguageResponse';
-import './styles.css';
+import AsyncResponse from 'components/AsyncResponse';
+import LanguageDataView from './LanguageDataView';
 
 type Props = {
   query?: string;
-  style?: React.CSSProperties;
 };
-function LanguageDisplay({ query, style }: Props) {
+function LanguageDisplay({ query }: Props) {
   const { asyncState, run, reset } = useAsync<string, DetectedLanguage>(detectLanguage, {
     debounceInterval: 1000
   });
@@ -27,12 +26,14 @@ function LanguageDisplay({ query, style }: Props) {
   }, [query, run, reset]);
 
   return (
-    <div className="LanguageDisplay" style={style}>
-      <LanguageResponse status={status} language={data} />
+    <>
+      <AsyncResponse status={status}>
+        <LanguageDataView language={data} />
+      </AsyncResponse>
       <span className={['loading', status === AsyncStatus.Pending ? 'active' : null].join(' ')}>
         <LoadingIcon />
       </span>
-    </div>
+    </>
   );
 }
 

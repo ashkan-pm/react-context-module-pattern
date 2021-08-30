@@ -1,0 +1,22 @@
+button {
+  outline: none;
+  padding: 8px 12px;
+  background-color: white;
+  color: #008d75;
+  border: 1px solid #cbcbcb;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:active {
+  background-color: #f8f8f8;
+  border-color: #00cfac;
+}
+
+button:focus {
+  border-color: #00cfac;
+}

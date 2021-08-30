@@ -1,6 +1,6 @@
 import { FallbackProps } from 'react-error-boundary';
 
-function LanguageDataView({ error, resetErrorBoundary }: FallbackProps) {
+function AsyncErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div>
       There was an error:
@@ -15,4 +15,4 @@ function LanguageDataView({ error, resetErrorBoundary }: FallbackProps) {
   );
 }
 
-export default LanguageDataView;
+export default AsyncErrorFallback;

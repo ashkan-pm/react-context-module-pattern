@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import Display from 'components/Display';
 import LanguageDisplay from 'components/LanguageDisplay';
-import LanguageErrorFallback from 'components/LanguageDisplay/LanguageErrorFallback';
+import AsyncErrorFallback from 'components/AsyncErrorFallback';
 import LanguageDetectorForm from 'components/LanguageDetectorForm';
 import { AsyncStateProvider } from 'contexts/AsyncState';
 
@@ -20,12 +21,14 @@ function LanguageDetector() {
         style={{ marginBottom: '32px' }}
       />
       <ErrorBoundary
-        FallbackComponent={LanguageErrorFallback}
+        FallbackComponent={AsyncErrorFallback}
         onReset={handleReset}
         resetKeys={[query]}
       >
         <AsyncStateProvider>
-          <LanguageDisplay query={query} />
+          <Display>
+            <LanguageDisplay query={query} />
+          </Display>
         </AsyncStateProvider>
       </ErrorBoundary>
     </div>

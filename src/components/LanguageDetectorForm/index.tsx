@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import './styles.css';
 
 type Props = {
@@ -28,9 +29,9 @@ function LanguageDetectorForm({ query, onQueryChange, style }: Props) {
         value={query}
         autoFocus
       />
-      <button type="reset" onClick={handleReset}>
+      <Button onClick={handleReset} style={{ marginLeft: '12px' }}>
         Reset
-      </button>
+      </Button>
     </form>
   );
 }

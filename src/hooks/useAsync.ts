@@ -1,5 +1,10 @@
-import { useCallback } from 'react';
-import { useAsyncState, AsyncContext, debouncedExecute, execute } from 'contexts/AsyncState';
+import { useCallback, useRef } from 'react';
+import {
+  useAsyncState,
+  debouncedExecute,
+  execute,
+  DebouncedAsyncExecute
+} from 'contexts/AsyncState';
 
 export enum AsyncStatus {
   Idle,
@@ -16,28 +21,37 @@ enum AsyncActionTypes {
 
 type Options = {
   debounceInterval?: number;
+  onReset?: () => void;
 };
-export function useAsync<RequestType, DataType>(
+export function useAsync<DataType, RequestType>(
   promise: (request: RequestType) => Promise<DataType>,
   { debounceInterval = 0 }: Options = {}
 ) {
-  const { asyncState, dispatch } = useAsyncState<DataType>() as unknown as AsyncContext<DataType>;
+  const { asyncState, dispatch } = useAsyncState<DataType>();
+  const debouncedExecuteRef = useRef<DebouncedAsyncExecute<DataType, RequestType>>();
 
   const run = useCallback(
-    (request: RequestType) =>
-      debounceInterval
-        ? debouncedExecute(debounceInterval, { dispatch, promise, request })
-        : execute({ dispatch, promise, request }),
+    (request: RequestType) => {
+      if (debounceInterval) {
+        debouncedExecuteRef.current = debouncedExecute(debounceInterval, {
+          dispatch,
+          promise,
+          request
+        });
+        return;
+      }
+
+      execute({ dispatch, promise, request });
+    },
     [dispatch, promise, debounceInterval]
   );
 
-  const reset = useCallback(
-    () =>
-      dispatch({
-        type: AsyncActionTypes.ASYNC_RESET
-      }),
-    [dispatch]
-  );
+  const reset = useCallback(() => {
+    if (debouncedExecuteRef.current) debouncedExecuteRef.current.cancel();
+    dispatch({
+      type: AsyncActionTypes.ASYNC_RESET
+    });
+  }, [dispatch]);
 
   return { asyncState, run, reset };
 }

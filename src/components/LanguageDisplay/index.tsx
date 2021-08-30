@@ -1,30 +1,16 @@
-import { useEffect } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
-import { AsyncStatus, useAsync } from 'hooks/useAsync';
-import { DetectedLanguage, detectLanguage } from 'api/detectLanguage';
+import { AsyncStatus } from 'hooks/useAsync';
 import { ReactComponent as LoadingIcon } from 'assets/loading.svg';
 import AsyncResponse from 'components/AsyncResponse';
 import LanguageDataView from './LanguageDataView';
+import { AsyncState } from 'contexts/AsyncState/types';
+import { DetectedLanguage } from 'api/detectLanguage';
 
 type Props = {
-  query?: string;
+  asyncState: AsyncState<DetectedLanguage>;
 };
-function LanguageDisplay({ query }: Props) {
-  const { asyncState, run, reset } = useAsync<string, DetectedLanguage>(detectLanguage, {
-    debounceInterval: 1000
-  });
-  const { data, status, error } = asyncState;
+function LanguageDisplay({ asyncState: { status, data, error } }: Props) {
   useErrorHandler(error);
-
-  useEffect(() => {
-    if (!query) {
-      reset();
-      return;
-    }
-
-    run(query);
-  }, [query, run, reset]);
-
   return (
     <>
       <AsyncResponse status={status}>

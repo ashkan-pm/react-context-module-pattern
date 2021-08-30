@@ -6,7 +6,9 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <LanguageDetector />
+      <AsyncStateProvider>
+        <LanguageDetector />
+      </AsyncStateProvider>
       <AsyncStateProvider>
         <Geolocation />
       </AsyncStateProvider>

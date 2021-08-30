@@ -1,8 +1,19 @@
-.LanguageDetectorForm > label {
+.LanguageDetectorForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.LanguageDetectorForm > div {
+  margin-bottom: 12px;
+}
+
+.LanguageDetectorForm label {
   color: #666;
 }
 
-.LanguageDetectorForm > input[type='text'] {
+.LanguageDetectorForm input[type='text'] {
   outline: none;
   background-color: white;
   padding: 8px 12px;
@@ -11,6 +22,6 @@
   transition: border-color 0.2s ease;
 }
 
-.LanguageDetectorForm > input[type='text']:focus {
+.LanguageDetectorForm input[type='text']:focus {
   border-color: #00cfac;
 }

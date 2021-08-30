@@ -1,7 +1,10 @@
-import { debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 import { AsyncActionTypes, AsyncDispatch } from './types';
 
-let debouncedAsyncExecute: (options: ExecuteOptions<any, any>) => void | undefined;
+export type DebouncedAsyncExecute<DataType, RequestType> = DebouncedFunc<
+  (options: ExecuteOptions<DataType, RequestType>) => void
+>;
+let debouncedAsyncExecute: DebouncedAsyncExecute<any, any>;
 
 type ExecuteOptions<DataType, RequestType> = {
   dispatch: AsyncDispatch<DataType>;
@@ -19,18 +22,16 @@ export async function execute<DataType, RequestType>({
   asyncExecute({ dispatch, ...args });
 }
 
-export async function debouncedExecute<DataType, RequestType>(
+export function debouncedExecute<DataType, RequestType>(
   debounceInterval: number,
   { dispatch, promise, request }: ExecuteOptions<DataType, RequestType>
-) {
-  let typedDebouncedAsyncExecute = debouncedAsyncExecute as (
-    options: ExecuteOptions<DataType, RequestType>
-  ) => void;
+): DebouncedAsyncExecute<DataType, RequestType> {
+  let typedDebouncedAsyncExecute = debouncedAsyncExecute as DebouncedAsyncExecute<
+    DataType,
+    RequestType
+  >;
   if (!debouncedAsyncExecute) {
-    debouncedAsyncExecute = debounce<(options: ExecuteOptions<DataType, RequestType>) => void>(
-      asyncExecute,
-      debounceInterval
-    );
+    debouncedAsyncExecute = debounce(asyncExecute, debounceInterval);
     typedDebouncedAsyncExecute = debouncedAsyncExecute;
   }
 
@@ -38,6 +39,7 @@ export async function debouncedExecute<DataType, RequestType>(
     type: AsyncActionTypes.ASYNC_PENDING
   });
   typedDebouncedAsyncExecute({ dispatch, promise, request });
+  return typedDebouncedAsyncExecute;
 }
 
 async function asyncExecute<DataType, RequestType>({

@@ -2,7 +2,7 @@ import { Reducer, useReducer, ReactNode, useContext, createContext, Context } fr
 import { AsyncStatus } from 'hooks/useAsync';
 import { AsyncContext, AsyncAction, AsyncState } from './types';
 import { asyncReducer } from './reducer';
-import { execute, debouncedExecute } from './actions';
+import { execute, debouncedExecute, DebouncedAsyncExecute } from './actions';
 
 const AsyncStateContext = createContext<AsyncContext<any> | undefined>(undefined);
 AsyncStateContext.displayName = 'AsyncStateContext';
@@ -17,16 +17,15 @@ export function AsyncStateProvider<DataType>({
   initializer = (state) => state,
   children
 }: Props<DataType> = {}) {
-  const TypedAsyncStateContext = AsyncStateContext as Context<AsyncContext<DataType>>;
   const [asyncState, dispatch] = useReducer<
     Reducer<AsyncState<DataType>, AsyncAction<DataType>>,
     AsyncState<DataType>
   >(asyncReducer, initialState, initializer);
 
   return (
-    <TypedAsyncStateContext.Provider value={{ asyncState, dispatch }}>
+    <AsyncStateContext.Provider value={{ asyncState, dispatch }}>
       {children}
-    </TypedAsyncStateContext.Provider>
+    </AsyncStateContext.Provider>
   );
 }
 
@@ -39,5 +38,5 @@ export function useAsyncState<DataType>() {
   return value;
 }
 
-export type { AsyncContext };
+export type { AsyncContext, DebouncedAsyncExecute };
 export { debouncedExecute, execute };
